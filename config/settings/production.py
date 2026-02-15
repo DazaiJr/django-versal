@@ -1,16 +1,15 @@
 from .base import *
+import os
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
-# Railway runs behind HTTPS proxy
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
 
-# CSRF settings (THIS FIXES ADMIN LOGIN)
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.railway.app",
+    "https://django-versal-production.up.railway.app",
 ]
 
 CSRF_COOKIE_SECURE = True
