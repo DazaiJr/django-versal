@@ -1,0 +1,14 @@
+asgiref==3.11.1
+Django==6.0.2
+django-browser-reload==1.21.0
+django-environ==0.12.1
+django-tailwind==4.4.2
+gunicorn==25.1.0
+packaging==26.0
+pillow==12.1.1
+psycopg2-binary==2.9.11
+pytailwindcss==0.3.0
+python-dotenv==1.2.1
+sqlparse==0.5.5
+tzdata==2025.3
+whitenoise==6.11.0
