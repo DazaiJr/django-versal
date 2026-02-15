@@ -2,14 +2,14 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = [".vercel.app"]
+ALLOWED_HOSTS = ["*"]
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": env("PGDATABASE"),
         "USER": env("PGUSER"),
-        "PASSWORD": env("POSTGRES_PASSWORD"),
+        "PASSWORD": env("PGPASSWORD"),
         "HOST": env("PGHOST"),
         "PORT": env("PGPORT", default="5432"),
     }
