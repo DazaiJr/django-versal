@@ -7,11 +7,11 @@ ALLOWED_HOSTS = [".vercel.app"]
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("POSTGRES_DB"),
-        "USER": env("POSTGRES_USER"),
+        "NAME": env("PGDATABASE"),
+        "USER": env("PGUSER"),
         "PASSWORD": env("POSTGRES_PASSWORD"),
-        "HOST": env("POSTGRES_HOST"),
-        "PORT": env("POSTGRES_PORT", default="5432"),
+        "HOST": env("PGHOST"),
+        "PORT": env("PGPORT", default="5432"),
     }
 }
 
