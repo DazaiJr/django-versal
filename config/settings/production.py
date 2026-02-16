@@ -24,6 +24,13 @@ CSRF_TRUSTED_ORIGINS = [
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
-# Ensure Cloudinary is used for media storage
-# If Cloudinary env vars are not set, this will fail, which is correct
-# as Railway doesn't support local media file serving
+# Media files - set MEDIA_ROOT for potential fallback
+MEDIA_ROOT = BASE_DIR / "media"
+
+# Check if Cloudinary credentials are set, otherwise fall back to local storage
+if not all([
+    os.getenv("CLOUDINARY_CLOUD_NAME"),
+    os.getenv("CLOUDINARY_API_KEY"),
+    os.getenv("CLOUDINARY_API_SECRET")
+]):
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
