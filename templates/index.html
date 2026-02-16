@@ -278,14 +278,15 @@
             description: '{{ product.description|escapejs }}',
             price: '₹{{ product.price }}',
             unit: '{{ product.unit }}',
-            image: '{{ product.image.url }}',
+            image: '{{ product.image.url|default:""|escapejs }}',
             rating: {{ product.rating }},
             reviews: {{ product.reviews_count }},
             badge: '{{ product.badge|default:""|escapejs }}'
         }{% if not forloop.last %},{% endif %}
         {% endfor %}
     ]
-}">
+}"
+x-init="console.log(products)">
     <div class="container mx-auto px-6">
         <div class="text-center mb-16 animate-fade-in-up">
             <span class="text-[#16a34a] font-bold uppercase tracking-wider text-sm">Our Offerings</span>
@@ -293,7 +294,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <template x-for="product in products" :key="product.id">
+            <template x-for="product in products" :key="product.id" x-init="console.log(products)">
                 <div class="bg-white rounded-3xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 group relative border border-gray-100 flex flex-col items-center text-center">
                     
                     <div x-show="product.badge" class="absolute top-4 right-4 bg-[#FFC107] text-[#0a2f15] text-xs font-bold px-3 py-1 rounded-full z-10" x-text="product.badge"></div>
