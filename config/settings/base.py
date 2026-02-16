@@ -14,10 +14,13 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
-environ.Env.read_env(BASE_DIR / ".env")
+
 
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env.bool("DEBUG", default=False)
+
+if DEBUG:
+    environ.Env.read_env(BASE_DIR / ".env")
 
 # Application definition
 INSTALLED_APPS = [
@@ -114,10 +117,8 @@ CLOUDINARY_STORAGE = {
 }
 
 # Use Cloudinary only if credentials are provided
-if CLOUDINARY_STORAGE['CLOUD_NAME'] and CLOUDINARY_STORAGE['API_KEY'] and CLOUDINARY_STORAGE['API_SECRET']:
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-else:
-    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
 
 # Media files
 
