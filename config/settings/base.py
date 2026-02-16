@@ -108,16 +108,21 @@ if DEBUG:
 
 # Cloudinary configuration
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': env("CLOUDINARY_CLOUD_NAME"),
-    'API_KEY': env("CLOUDINARY_API_KEY"),
-    'API_SECRET': env("CLOUDINARY_API_SECRET"),
+    'CLOUD_NAME': env("CLOUDINARY_CLOUD_NAME", default=""),
+    'API_KEY': env("CLOUDINARY_API_KEY", default=""),
+    'API_SECRET': env("CLOUDINARY_API_SECRET", default=""),
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# Use Cloudinary only if credentials are provided
+if CLOUDINARY_STORAGE['CLOUD_NAME'] and CLOUDINARY_STORAGE['API_KEY'] and CLOUDINARY_STORAGE['API_SECRET']:
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+else:
+    DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
+
 # Media files
 
 MEDIA_URL = "/media/"
-# MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Tailwind
 TAILWIND_APP_NAME = "theme"
