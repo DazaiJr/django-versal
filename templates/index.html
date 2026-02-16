@@ -277,8 +277,8 @@
             name: '{{ product.name|escapejs }}',
             description: '{{ product.description|escapejs }}',
             price: '₹{{ product.price }}',
-            unit: '{{ product.unit|escapejs }}',
-            image: '{{ product.image.url|escapejs if product.image else "" }}',
+            unit: '{{ product.unit }}',
+            image: '{{ product.image.url }}',
             rating: {{ product.rating }},
             reviews: {{ product.reviews_count }},
             badge: '{{ product.badge|default:""|escapejs }}'
