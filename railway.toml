@@ -1,0 +1,6 @@
+[build]
+builder = "Nixpacks"
+buildCommand = "./build_files.sh"
+
+[deploy]
+startCommand = "python manage.py migrate && gunicorn --bind 0.0.0.0:$PORT config.wsgi:application"
