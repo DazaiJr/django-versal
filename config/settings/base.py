@@ -3,7 +3,7 @@ import os
 import sys
 import environ
 
-# BASE_DIR (settings/ ke andar hone ki wajah se 3 level upar)
+# BASE_DIR (settings ke andar hone ki wajah se 3 level upar)
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # apps/ ko python path me add karna
@@ -14,15 +14,17 @@ env = environ.Env(
     DEBUG=(bool, False)
 )
 
-
+# Read .env ONLY in dev
+if env.bool("DEBUG", default=False):
+    environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env.bool("DEBUG", default=False)
 
-if DEBUG:
-    environ.Env.read_env(BASE_DIR / ".env")
+# ------------------------------------------------------------------------------
+# Applications
+# ------------------------------------------------------------------------------
 
-# Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -31,9 +33,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    #cloudinary
-    'cloudinary',
-    'cloudinary_storage',   
+    # Cloudinary
+    "cloudinary",
+    "cloudinary_storage",
 
     # Third-party
     "tailwind",
@@ -43,11 +45,12 @@ INSTALLED_APPS = [
     "core",
 ]
 
-# Dev-only apps
 if DEBUG:
-    INSTALLED_APPS += [
-        "django_browser_reload",
-    ]
+    INSTALLED_APPS += ["django_browser_reload"]
+
+# ------------------------------------------------------------------------------
+# Middleware
+# ------------------------------------------------------------------------------
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -60,11 +63,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# Dev-only middleware
 if DEBUG:
-    MIDDLEWARE += [
-        "django_browser_reload.middleware.BrowserReloadMiddleware",
-    ]
+    MIDDLEWARE += ["django_browser_reload.middleware.BrowserReloadMiddleware"]
+
+# ------------------------------------------------------------------------------
+# Templates
+# ------------------------------------------------------------------------------
 
 ROOT_URLCONF = "config.urls"
 
@@ -86,7 +90,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# Password validation
+# ------------------------------------------------------------------------------
+# Auth / i18n
+# ------------------------------------------------------------------------------
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -99,37 +106,43 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# ------------------------------------------------------------------------------
+# Static & Media (Cloudinary)
+# ------------------------------------------------------------------------------
+
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+STORAGES = {
+    # MEDIA → Cloudinary (production-grade)
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
 
-if DEBUG:
-    STATICFILES_DIRS = [BASE_DIR / "static"]
-
-
-# Cloudinary configuration
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': env("CLOUDINARY_CLOUD_NAME", default=""),
-    'API_KEY': env("CLOUDINARY_API_KEY", default=""),
-    'API_SECRET': env("CLOUDINARY_API_SECRET", default=""),
+    # STATIC → WhiteNoise
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
 }
 
-# Use Cloudinary only if credentials are provided
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# ❌ DO NOT set MEDIA_ROOT / MEDIA_URL when using Cloudinary
 
+# ------------------------------------------------------------------------------
+# Cloudinary credentials
+# ------------------------------------------------------------------------------
 
+CLOUDINARY_STORAGE = {
+    "CLOUD_NAME": env("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": env("CLOUDINARY_API_KEY"),
+    "API_SECRET": env("CLOUDINARY_API_SECRET"),
+}
 
-# Media files
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
+# ------------------------------------------------------------------------------
 # Tailwind
+# ------------------------------------------------------------------------------
+
 TAILWIND_APP_NAME = "theme"
 
-# Tailwind / npm (dev only)
 if DEBUG:
     NPM_BIN_PATH = "npm"
     INTERNAL_IPS = ["127.0.0.1"]
