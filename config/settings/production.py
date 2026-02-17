@@ -2,7 +2,8 @@ from .base import *
 import os
 import dj_database_url
 
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=False)
+
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
