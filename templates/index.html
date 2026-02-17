@@ -4,16 +4,16 @@
   id="home"
   class="relative w-full h-[600px] md:h-[700px] overflow-hidden"
   x-data="{
-    activeSlide: {{ slides.0.id }},
+    activeSlide: {% if slides %}{{ slides.0.id }}{% else %}null{% endif %},
     slides: [
       {% for slide in slides %}
       {
         id: {{ slide.id }},
         title: '{{ slide.title|escapejs }}',
         subtitle: '{{ slide.subtitle|escapejs }}',
-        image: '{{ slide.image.url }}',
+        image: '{% if slide.image %}{{ slide.image.url }}{% endif %}',
         showButton: {{ slide.show_button|yesno:"true,false" }}
-      },
+      }{% if not forloop.last %},{% endif %}
       {% endfor %}
     ],
     startSlider() {
@@ -278,7 +278,7 @@
             description: '{{ product.description|escapejs }}',
             price: '₹{{ product.price }}',
             unit: '{{ product.unit }}',
-            image: '{{ product.image.url }}',
+            image: '{% if product.image %}{{ product.image.url }}{% endif %}',
             rating: {{ product.rating }},
             reviews: {{ product.reviews_count }},
             badge: '{{ product.badge|default:""|escapejs }}'
