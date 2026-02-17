@@ -11,19 +11,20 @@
         id: {{ slide.id }},
         title: '{{ slide.title|escapejs }}',
         subtitle: '{{ slide.subtitle|escapejs }}',
-        image: '{% if slide.image %}{{ slide.image.url }}{% endif %}',
+        image: {% if slide.image %}'{{ slide.image.url }}'{% else %}null{% endif %},
         showButton: {{ slide.show_button|yesno:"true,false" }}
       }{% if not forloop.last %},{% endif %}
       {% endfor %}
     ],
     startSlider() {
-      setInterval(() => {
+    if (!this.slides.length) return
+    setInterval(() => {
         let index = this.slides.findIndex(
-          s => s.id === this.activeSlide
+        s => s.id === this.activeSlide
         )
         this.activeSlide =
-          this.slides[(index + 1) % this.slides.length].id
-      }, 4000)
+        this.slides[(index + 1) % this.slides.length].id
+    }, 4000)
     }
   }"
   x-init="startSlider()"
@@ -38,7 +39,7 @@
       x-transition:leave-start="opacity-100 scale-100"
       x-transition:leave-end="opacity-0 scale-100"
       class="absolute inset-0 w-full h-full bg-cover bg-center"
-      :style="`background-image: url('${slide.image}');`"
+      :style="slide.image ? `background-image: url('${slide.image}')` : ''"
     >
       <div
         class="absolute inset-0 bg-black/40 bg-gradient-to-r from-black/70 to-transparent"
