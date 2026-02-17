@@ -269,25 +269,30 @@
   </div>
 </section>
 
-<section id="products" class="py-24 bg-[#f8f9fa]" x-data="{
+<section
+  id="products"
+  class="py-24 bg-[#f8f9fa]"
+  x-data="{
     openModal: false,
     selectedProduct: {},
     products: [
-        {% for product in products %}
-        {
-            id: {{ product.id }},
-            name: '{{ product.name|escapejs }}',
-            description: '{{ product.description|escapejs }}',
-            price: '₹{{ product.price }}',
-            unit: '{{ product.unit }}',
-            image: '{{ product.image.url }}',
-            rating: {{ product.rating }},
-            reviews: {{ product.reviews_count }},
-            badge: '{{ product.badge|default:""|escapejs }}'
-        }{% if not forloop.last %},{% endif %}
-        {% endfor %}
+      {% for product in products %}
+      {
+        id: {{ product.id }},
+        name: \"{{ product.name|escapejs }}\",
+        description: \"{{ product.description|escapejs }}\",
+        price: \"₹{{ product.price }}\",
+        unit: \"{{ product.unit|escapejs }}\",
+        image: \"{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/placeholder.png' %}{% endif %}\",
+        rating: {{ product.rating|default:0 }},
+        reviews: {{ product.reviews_count|default:0 }},
+        badge: \"{{ product.badge|default:''|escapejs }}\"
+      }{% if not forloop.last %},{% endif %}
+      {% endfor %}
     ]
-}">
+  }"
+>
+
     <div class="container mx-auto px-6">
         <div class="text-center mb-16 animate-fade-in-up">
             <span class="text-[#16a34a] font-bold uppercase tracking-wider text-sm">Our Offerings</span>
